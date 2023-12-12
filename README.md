@@ -32,8 +32,6 @@ Fiat backed Stablecoin Contracts Based on the [centre-tokens](https://github.com
 
 ![Mint Tokens](https://github.com/ldsanchez/fiat-stablecoin-se2/assets/5996795/5d588c51-406a-443b-a1c0-756a552fbe7a)
 
-## Rescue Tokens
-
 ## Requirements
 
 Before you begin, you need to install the following tools:
