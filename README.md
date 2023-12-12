@@ -4,9 +4,35 @@ Fiat backed Stablecoin Contracts Based on the [centre-tokens](https://github.com
 
 # Fiat Stablecoin Manager
 
-![Fiat Stablecoin Manager](https://github.com/ldsanchez/fiat-stablecoin-se2/assets/5996795/418937c4-bdf5-4086-8046-0c1370c893e9)
+![Fiat Stablecoin Manager](https://github.com/ldsanchez/fiat-stablecoin-se2/assets/5996795/4e56e018-db1a-42d9-9660-1a4edfc6ed7e)
 
 # Functionality
+
+- [x] Initialize Token
+- [x] Add/Remove Minters
+- [x] Pause/Unpause Token
+- [x] Add/Remove Addresses from blacklist
+- [x] Update Roles
+- [x] Rescue ERC20 Tokens
+- [x] Mint new Tokens
+
+## Initialize Token
+
+![Initialize Token](https://github.com/ldsanchez/fiat-stablecoin-se2/assets/5996795/ee868e27-d84f-424d-9570-2ffcb0533a63)
+
+![Initialize Token](https://github.com/ldsanchez/fiat-stablecoin-se2/assets/5996795/2802a7ed-c291-4a79-bb04-a1b9a72497b7)
+
+![Token Info](https://github.com/ldsanchez/fiat-stablecoin-se2/assets/5996795/3ab04032-c1af-4090-bb55-82e5e4f2635d)
+
+## Admin Dashboard by Role
+
+![Token Info](https://github.com/ldsanchez/fiat-stablecoin-se2/assets/5996795/29e6ba9f-27ea-42e5-9115-dae4a658692b)
+
+## Mint Tokens
+
+![Mint Tokens](https://github.com/ldsanchez/fiat-stablecoin-se2/assets/5996795/5d588c51-406a-443b-a1c0-756a552fbe7a)
+
+## Rescue Tokens
 
 ## Requirements
 
