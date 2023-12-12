@@ -116,6 +116,11 @@ const contracts = {
             },
             {
               inputs: [],
+              name: "FiatTokenV1__RescuerMustBeNonZeroAddress",
+              type: "error",
+            },
+            {
+              inputs: [],
               name: "FiatTokenV1__TokenAlreadyInitialized",
               type: "error",
             },
@@ -407,6 +412,12 @@ const contracts = {
                   indexed: false,
                   internalType: "address",
                   name: "blacklister",
+                  type: "address",
+                },
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "rescuer",
                   type: "address",
                 },
               ],
@@ -875,6 +886,11 @@ const contracts = {
                 {
                   internalType: "address",
                   name: "newOwner",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "newRescuer",
                   type: "address",
                 },
               ],

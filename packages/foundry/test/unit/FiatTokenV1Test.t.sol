@@ -5,6 +5,7 @@ pragma solidity 0.8.20;
 import {Test, console} from "forge-std/Test.sol";
 import {FiatTokenV1} from "../../src/FiatTokenV1.sol";
 import {Pausable} from "../../src/Pausable.sol";
+import {Rescuable} from "../../src/Rescuable.sol";
 import {Blacklistable} from "../../src/Blacklistable.sol";
 import {Ownable} from "../../src/Ownable.sol";
 import {MasterMinter} from "../../src/minting/MasterMinter.sol";
@@ -23,7 +24,8 @@ contract FiatTokenV1Test is Test {
         address indexed owner,
         address masterMinter,
         address pauser,
-        address blacklister
+        address blacklister,
+        address rescuer
     );
     event MinterConfigured(address indexed minter, uint256 minterAllowedAmount);
     event MinterRemoved(address indexed oldMinter);
@@ -64,6 +66,7 @@ contract FiatTokenV1Test is Test {
             fiatTokenOwner,
             fiatTokenOwner,
             fiatTokenOwner,
+            fiatTokenOwner,
             fiatTokenOwner
         );
         fiatTokenV1.initializeToken(
@@ -71,6 +74,7 @@ contract FiatTokenV1Test is Test {
             TOKEN_SYMBOL,
             TOKEN_CURRENCY,
             TOKEN_DECIMALS,
+            fiatTokenOwner,
             fiatTokenOwner,
             fiatTokenOwner,
             fiatTokenOwner,
@@ -84,6 +88,7 @@ contract FiatTokenV1Test is Test {
             TOKEN_SYMBOL,
             TOKEN_CURRENCY,
             TOKEN_DECIMALS,
+            fiatTokenOwner,
             fiatTokenOwner,
             fiatTokenOwner,
             fiatTokenOwner,
@@ -102,6 +107,7 @@ contract FiatTokenV1Test is Test {
             fiatTokenOwner,
             fiatTokenOwner,
             fiatTokenOwner,
+            fiatTokenOwner,
             fiatTokenOwner
         );
     }
@@ -114,6 +120,7 @@ contract FiatTokenV1Test is Test {
             TOKEN_CURRENCY,
             TOKEN_DECIMALS,
             address(0),
+            fiatTokenOwner,
             fiatTokenOwner,
             fiatTokenOwner,
             fiatTokenOwner
@@ -130,6 +137,7 @@ contract FiatTokenV1Test is Test {
             fiatTokenOwner,
             address(0),
             fiatTokenOwner,
+            fiatTokenOwner,
             fiatTokenOwner
         );
     }
@@ -144,6 +152,7 @@ contract FiatTokenV1Test is Test {
             fiatTokenOwner,
             fiatTokenOwner,
             address(0),
+            fiatTokenOwner,
             fiatTokenOwner
         );
     }
@@ -158,7 +167,8 @@ contract FiatTokenV1Test is Test {
             fiatTokenOwner,
             fiatTokenOwner,
             fiatTokenOwner,
-            address(0)
+            address(0),
+            fiatTokenOwner
         );
     }
 

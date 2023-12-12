@@ -30,3 +30,63 @@ p {
 .btn.btn-ghost {
   @apply shadow-none;
 }
+
+.text-secondary {
+  color: hsla(217.3, 16.97%, 66.88%, 1) !important;
+  }
+
+input div.flex{
+  border-width:1px !important;
+  border-radius: .5rem !important;
+  --tw-text-opacity: 1;
+color: rgb(17 24 39/1) !important;
+font-size: .875rem !important;
+line-height: 1.25rem !important;
+padding: .625rem !important;
+height: 40px;
+}
+
+div.flex.border-2{
+  border-width:1px !important;
+  border-radius: .5rem !important;
+  width: 100% !important;
+  color: rgb(17 24 39/1) !important;
+}
+
+div.mt-8.flex.new input::placeholder {
+  color: gray !important;
+}
+
+div.mt-8.flex.new input{
+  border-width:1px !important;
+  border-radius: .5rem !important;
+  --tw-text-opacity: 1;
+color: rgb(17 24 39/1) !important;
+font-size: .875rem !important;
+line-height: 1.25rem !important;
+padding: .625rem !important;
+height: 40px !important;
+
+}
+
+div.mt-8.flex input{
+  border-width:1px !important;
+  border-radius: .5rem !important;
+  --tw-text-opacity: 1;
+color: rgb(17 24 39/1) !important;
+font-size: .875rem !important;
+line-height: 1.25rem !important;
+padding: .625rem !important;
+height: 40px;
+color: rgb(17 24 39/1) !important;
+font-size: .875rem !important;
+line-height: 1.25rem !important;
+padding: .625rem !important;
+height: 40px;
+background-color: hsl(0 0% 100% / 1) !important;
+}
+
+div.mt-8.flex{
+  border-width:1px !important;
+  border-radius: .5rem !important;
+}

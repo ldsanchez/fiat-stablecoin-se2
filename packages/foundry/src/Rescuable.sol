@@ -9,23 +9,15 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
 contract Rescuable is Ownable {
     using SafeERC20 for IERC20;
 
-    address private _rescuer;
+    address public rescuer;
 
     event RescuerChanged(address indexed newRescuer);
-
-    /**
-     * @notice Returns current rescuer
-     * @return Rescuer's address
-     */
-    function rescuer() external view returns (address) {
-        return _rescuer;
-    }
 
     /**
      * @notice Revert if called by any account other than the rescuer.
      */
     modifier onlyRescuer() {
-        require(msg.sender == _rescuer, "Rescuable: caller is not the rescuer");
+        require(msg.sender == rescuer, "Rescuable: caller is not the rescuer");
         _;
     }
 
@@ -45,7 +37,7 @@ contract Rescuable is Ownable {
      */
     function updateRescuer(address newRescuer) external onlyOwner {
         require(newRescuer != address(0), "Rescuable: new rescuer is the zero address");
-        _rescuer = newRescuer;
+        rescuer = newRescuer;
         emit RescuerChanged(newRescuer);
     }
 }

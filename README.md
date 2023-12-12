@@ -2,14 +2,11 @@
 
 Fiat backed Stablecoin Contracts Based on the [centre-tokens](https://github.com/centrehq/centre-tokens)
 
-# To-Do
+# Fiat Stablecoin Manager
 
-- [x] Refactor Requirements
-- [x] Refactor Naming Conventions
-- [x] Optimize storage
-- Account Abstraction
-- Proxy contract pattern for upgrades
-- Multisig Wallet for Deployment
+![Fiat Stablecoin Manager](https://github.com/ldsanchez/fiat-stablecoin-se2/assets/5996795/418937c4-bdf5-4086-8046-0c1370c893e9)
+
+# Functionality
 
 ## Requirements
 
@@ -63,6 +60,15 @@ yarn start
 Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the contract component or the example ui in the frontend. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
 
 Run smart contract test with `yarn foundry:test`
+
+# To-Do
+
+- [x] Refactor Requirements
+- [x] Refactor Naming Conventions
+- [x] Optimize storage
+- Account Abstraction
+- Proxy contract pattern for upgrades
+- Multisig Wallet for Deployment
 
 ## Contributing to Scaffold-ETH 2
 

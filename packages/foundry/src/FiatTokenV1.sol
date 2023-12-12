@@ -15,20 +15,10 @@ import {EIP3009} from "./EIP3009.sol";
 import {EIP2612} from "./EIP2612.sol";
 
 /**
- * @notice Base contract which allows to create a token backed by fiat reserves
- * @dev Forked from https://github.com/centrehq/centre-tokens/tree/master
- * Modifications:
- * 1. Flatening of the base contracts
- * 2. Remove requires for errors
- * 3. Created Getter for storage variables
- * 4. Change naming conventions
- */
-
-/**
  * @title FiatToken
  * @dev ERC20 Token backed by fiat reserves
  */
-
+// contract FiatTokenV1 is AbstractFiatTokenV1, Ownable, Pausable, Blacklistable, Rescuable { // V1
 contract FiatTokenV1 is AbstractFiatTokenV1, Ownable, Pausable, Blacklistable, Rescuable, EIP3009, EIP2612 {
     ////////////////////
     // Errors //////////
@@ -39,6 +29,7 @@ contract FiatTokenV1 is AbstractFiatTokenV1, Ownable, Pausable, Blacklistable, R
     error FiatTokenV1__PauserMustBeNonZeroAddress();
     error FiatTokenV1__BlacklisterMustBeNonZeroAddress();
     error FiatTokenV1__OwnerMustBeNonZeroAddress();
+    error FiatTokenV1__RescuerMustBeNonZeroAddress();
     error FiatTokenV1__NotAMinter();
     error FiatTokenV1__RecipientMustBeNonZeroAddress();
     error FiatTokenV1__AmountMustBeGreaterThanZero();
@@ -53,6 +44,7 @@ contract FiatTokenV1 is AbstractFiatTokenV1, Ownable, Pausable, Blacklistable, R
     error FiatTokenV1__BurnAmountNotGreaterThanZero();
     error FiatTokenV1__BurnAmountExceedsBalance(uint256 balance, uint256 amount);
 
+    // refactor creating getters for these and change naming convention
     string public s_tokenName;
     string public s_tokenSymbol;
     uint8 public s_tokenDecimals;
@@ -75,7 +67,8 @@ contract FiatTokenV1 is AbstractFiatTokenV1, Ownable, Pausable, Blacklistable, R
         address indexed owner,
         address masterMinter,
         address pauser,
-        address blacklister
+        address blacklister,
+        address rescuer
     );
     event Mint(address indexed minter, address indexed to, uint256 amount);
     event Burn(address indexed burner, uint256 amount);
@@ -103,7 +96,8 @@ contract FiatTokenV1 is AbstractFiatTokenV1, Ownable, Pausable, Blacklistable, R
         address newMasterMinter,
         address newPauser,
         address newBlacklister,
-        address newOwner
+        address newOwner,
+        address newRescuer
     ) public {
         if (s_isInitialized) {
             revert FiatTokenV1__TokenAlreadyInitialized();
@@ -120,6 +114,9 @@ contract FiatTokenV1 is AbstractFiatTokenV1, Ownable, Pausable, Blacklistable, R
         if (newOwner == address(0)) {
             revert FiatTokenV1__OwnerMustBeNonZeroAddress();
         }
+        if (newRescuer == address(0)) {
+            revert FiatTokenV1__RescuerMustBeNonZeroAddress();
+        }
 
         s_tokenName = tokenName;
         s_tokenSymbol = tokenSymbol;
@@ -128,12 +125,21 @@ contract FiatTokenV1 is AbstractFiatTokenV1, Ownable, Pausable, Blacklistable, R
         s_masterMinter = newMasterMinter;
         pauser = newPauser;
         blacklister = newBlacklister;
+        rescuer = newRescuer;
         setOwner(newOwner);
         s_isInitialized = true;
         _initializedVersion = 1; // V2
         DOMAIN_SEPARATOR = EIP712.makeDomainSeparator(s_tokenName, "1"); // V2
         emit TokenInitialized(
-            tokenName, tokenSymbol, tokenCurrency, tokenDecimals, newOwner, newMasterMinter, newPauser, newBlacklister
+            tokenName,
+            tokenSymbol,
+            tokenCurrency,
+            tokenDecimals,
+            newOwner,
+            newMasterMinter,
+            newPauser,
+            newBlacklister,
+            rescuer
         );
     }
 
@@ -563,10 +569,6 @@ contract FiatTokenV1 is AbstractFiatTokenV1, Ownable, Pausable, Blacklistable, R
     function getMasterMinter() external view returns (address) {
         return s_masterMinter;
     }
-
-    // function getPauser() external view returns (address) {
-    //     return pauser;
-    // }
 
     function getIsInitialized() external view returns (bool) {
         return s_isInitialized;

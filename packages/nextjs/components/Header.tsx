@@ -2,9 +2,19 @@ import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Bars3Icon, BugAntIcon, MagnifyingGlassIcon, SparklesIcon, CircleStackIcon } from "@heroicons/react/24/outline";
+import { Roles } from "./Roles";
+import {
+  AdjustmentsHorizontalIcon,
+  Bars3Icon,
+  BoltIcon,
+  BugAntIcon,
+  CircleStackIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
+// import { useAccount } from 'wagmi'
+import { useRoles } from "~~/hooks/scaffold-eth";
 
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
   const router = useRouter();
@@ -29,6 +39,8 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
 export const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const burgerMenuRef = useRef<HTMLDivElement>(null);
+  const { isInitialize, isMinter } = useRoles();
+
   useOutsideClick(
     burgerMenuRef,
     useCallback(() => setIsDrawerOpen(false), []),
@@ -39,30 +51,58 @@ export const Header = () => {
       <li>
         <NavLink href="/">Home</NavLink>
       </li>
-      <li>
-        <NavLink href="/debug">
-          <BugAntIcon className="h-4 w-4" />
-          Debug Contracts
-        </NavLink>
-      </li>
-      {/* <li>
-        <NavLink href="/example-ui">
-          <SparklesIcon className="h-4 w-4" />
-          Example UI
-        </NavLink>
-      </li> */}
-      <li>
-        <NavLink href="/mint">
-          <CircleStackIcon className="h-4 w-4" />
-          Mint Tokens
-        </NavLink>
-      </li>
+      {!isInitialize && (
+        <li>
+          <NavLink href="/initialize">
+            <BoltIcon className="h-4 w-4" />
+            Init Token
+          </NavLink>
+        </li>
+      )}
+      {isInitialize && (
+        <li>
+          <NavLink href="/infotoken">
+            <BoltIcon className="h-4 w-4" />
+            Info Token
+          </NavLink>
+        </li>
+      )}
+      {isMinter && (
+        <li>
+          <NavLink href="/mint">
+            <CircleStackIcon className="h-4 w-4" />
+            Mint Tokens
+          </NavLink>
+        </li>
+      )}
+      {isInitialize && (
+        <li>
+          <NavLink href="/indexadmin">
+            <AdjustmentsHorizontalIcon className="h-4 w-4" />
+            Admin
+          </NavLink>
+        </li>
+      )}
       <li>
         <NavLink href="/blockexplorer">
           <MagnifyingGlassIcon className="h-4 w-4" />
           Block Explorer
         </NavLink>
       </li>
+      {isInitialize && (
+        <li>
+          <NavLink href="/debug">
+            <BugAntIcon className="h-4 w-4" />
+            Debug Contracts
+          </NavLink>
+        </li>
+      )}
+      {/* <li>
+        <NavLink href="/example-ui">
+          <SparklesIcon className="h-4 w-4" />
+          Example UI
+        </NavLink>
+      </li> */}
     </>
   );
 
@@ -103,6 +143,7 @@ export const Header = () => {
         <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">{navLinks}</ul>
       </div>
       <div className="navbar-end flex-grow mr-4">
+        {isInitialize && <Roles />}
         <RainbowKitCustomConnectButton />
         <FaucetButton />
       </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { TransactionReceipt, TransactionRequest, TransactionResponse } from "@ethersproject/abstract-provider";
 import { SendTransactionResult } from "@wagmi/core";
 import { Signer } from "ethers";
@@ -90,7 +91,7 @@ export const useTransactor = (_signer?: Signer): TTransactionFunc => {
       // TODO handle error properly
       console.error("⚡️ ~ file: useTransactor.ts ~ error", error);
       const message = getParsedEthersError(error);
-      notification.error(message);
+      //notification.error(message);
     }
 
     return transactionResponse;

@@ -14,3 +14,4 @@ export * from "./useScaffoldEventHistory";
 export * from "./useTransactor";
 export * from "./useFetchBlocks";
 export * from "./useContractLogs";
+export * from "./useRoles";

@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useRef, useState } from "react";
-import Marquee from "react-fast-marquee";
+import { BigNumber } from "ethers";
 import { useAccount } from "wagmi";
 import {
   useAnimationConfig,
@@ -9,26 +10,93 @@ import {
   useScaffoldEventSubscriber,
 } from "~~/hooks/scaffold-eth";
 
-const MARQUEE_PERIOD_IN_SEC = 5;
+type ContractDataProps = {
+  setInter: (value: BigNumber) => void;
+  inter: BigNumber;
+};
 
-export const ContractData = () => {
+export const ContractData: React.FC<ContractDataProps> = ({ inter, setInter }) => {
   const { address } = useAccount();
-  const [transitionEnabled, setTransitionEnabled] = useState(true);
-  const [isRightDirection, setIsRightDirection] = useState(false);
-  const [marqueeSpeed, setMarqueeSpeed] = useState(0);
+  const [minter, setMinter] = useState("");
+  const [contaShow, setContaShow] = useState(0);
+  const [contaShow2, setContaShow2] = useState(0);
+  const [totalSended, setTotalSended] = useState(0);
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const greetingRef = useRef<HTMLDivElement>(null);
-
-  const { data: totalCounter } = useScaffoldContractRead({
+  const { isLoading: isLoadingMA, data: dataMA } = useScaffoldContractRead({
     contractName: "FiatTokenV1",
-    functionName: "totalSupply",
+    functionName: "minterAllowance",
+    args: [minter],
   });
 
-  const { data: currentGreeting, isLoading: isGreetingLoading } = useScaffoldContractRead({
-    contractName: "FiatTokenV1",
-    functionName: "paused",
-  });
+  useEffect(() => {
+    if (address == undefined) {
+      setContaShow(contaShow + 1);
+    } else {
+      if (address !== "") {
+        setMinter(address!);
+      }
+    }
+  }, [contaShow]);
+
+  useEffect(() => {
+    if (inter.toNumber() > 0) {
+      setTotalSended(totalSended + inter.toNumber());
+      setInter(BigNumber.from("0"));
+    }
+  }, [inter]);
+
+  useEffect(() => {
+    if (myGreetingChangeEvents != undefined) {
+      console.log("Events:", myGreetingChangeEvents, myGreetingChangeEvents?.length);
+      let total = 0;
+      for (let i = 0; i < (myGreetingChangeEvents?.length ? myGreetingChangeEvents?.length : 0); ++i) {
+        const item = myGreetingChangeEvents ? myGreetingChangeEvents[i] : null;
+        if (item != null) {
+          console.log("item tot", item.args[2].toNumber());
+          total = total + item.args[2].toNumber();
+        }
+      }
+      setTotalSended(total);
+    } else {
+      setContaShow2(contaShow2 + 1);
+    }
+  }, [contaShow2]);
+
+  useEffect(() => {
+    if (address == undefined) {
+      setContaShow(contaShow + 1);
+    } else {
+      if (address !== "") {
+        setMinter(address!);
+      }
+    }
+
+    console.log("Events:", myGreetingChangeEvents);
+    if (myGreetingChangeEvents != undefined) {
+      console.log("Events:", myGreetingChangeEvents, myGreetingChangeEvents?.length);
+      let total = 0;
+      for (let i = 0; i < (myGreetingChangeEvents?.length ? myGreetingChangeEvents?.length : 0); ++i) {
+        const item = myGreetingChangeEvents ? myGreetingChangeEvents[i] : null;
+        if (item != null) {
+          console.log("item tot", item.args[2].toNumber());
+          total = total + item.args[2].toNumber();
+        }
+      }
+      setTotalSended(total);
+    } else {
+      setContaShow2(contaShow2 + 1);
+    }
+  }, []);
+  /* 
+  useEffect(() => {
+    if (account !== undefined && account !== ""){
+      if (!dataCheckMinter){
+        setShowMinter(false)
+      } else {
+        setShowMinter(true)
+      }
+    }
+  }, [account]); */
 
   useScaffoldEventSubscriber({
     contractName: "FiatTokenV1",
@@ -45,98 +113,39 @@ export const ContractData = () => {
   } = useScaffoldEventHistory({
     contractName: "FiatTokenV1",
     eventName: "Mint",
-    fromBlock: Number(process.env.NEXT_PUBLIC_DEPLOY_BLOCK) || 0,
-    filters: { minter: address },
+    fromBlock: 0,
+    filters: { minter: minter },
     blockData: true,
   });
 
-  console.log("Events:", isLoadingEvents, errorReadingEvents, myGreetingChangeEvents);
-
-  const { data: yourContract } = useScaffoldContract({ contractName: "FiatTokenV1" });
-  console.log("FiatTokenV1: ", yourContract);
-
-  const { showAnimation } = useAnimationConfig(totalCounter);
-
-  const showTransition = transitionEnabled && !!currentGreeting && !isGreetingLoading;
-
-  useEffect(() => {
-    if (transitionEnabled && containerRef.current && greetingRef.current) {
-      setMarqueeSpeed(
-        Math.max(greetingRef.current.clientWidth, containerRef.current.clientWidth) / MARQUEE_PERIOD_IN_SEC,
-      );
-    }
-  }, [transitionEnabled, containerRef, greetingRef]);
-
   return (
-    <div className="flex flex-col justify-center items-center bg-[url('/assets/gradient-bg.png')] bg-[length:100%_100%] py-10 px-5 sm:px-0 lg:py-auto max-w-[100vw] ">
-      <div
-        className={`flex flex-col max-w-md bg-base-200 bg-opacity-70 rounded-2xl shadow-lg px-5 py-4 w-full ${
-          showAnimation ? "animate-zoom" : ""
-        }`}
-      >
-        <div className="flex justify-between w-full">
-          <button
-            className="btn btn-circle btn-ghost relative bg-center bg-[url('/assets/switch-button-on.png')] bg-no-repeat"
-            onClick={() => {
-              setTransitionEnabled(!transitionEnabled);
-            }}
-          >
-            <div
-              className={`absolute inset-0 bg-center bg-no-repeat bg-[url('/assets/switch-button-off.png')] transition-opacity ${
-                transitionEnabled ? "opacity-0" : "opacity-100"
-              }`}
-            />
-          </button>
-          <div className="bg-secondary border border-primary rounded-xl flex">
-            <div className="p-2 py-1 border-r border-primary flex items-end">Total count</div>
-            <div className="text-4xl text-right min-w-[3rem] px-2 py-1 flex justify-end font-bai-jamjuree">
-              {totalCounter?.toString() || "0"}
-            </div>
+    <div
+      style={{
+        width: "50%",
+        marginLeft: "auto",
+        marginRight: "auto",
+        marginBottom: 15,
+        borderWidth: 2,
+        borderStyle: "solid",
+        height: "fit-content",
+      }}
+      className="card w-96 text-primary-content"
+    >
+      <div className="card-body">
+        <div className="stats shadow">
+          <div className="stat place-items-center">
+            <div className="stat-title">Tokens Allowance</div>
+            <div className="stat-value">{dataMA?.toString()}</div>
           </div>
-        </div>
 
-        <div className="mt-3 border border-primary bg-neutral rounded-3xl text-secondary  overflow-hidden text-[116px] whitespace-nowrap w-full uppercase tracking-tighter font-bai-jamjuree leading-tight">
-          <div className="relative overflow-x-hidden" ref={containerRef}>
-            {/* for speed calculating purposes */}
-            <div className="absolute -left-[9999rem]" ref={greetingRef}>
-              <div className="px-4">{currentGreeting}</div>
-            </div>
-            {new Array(3).fill("").map((_, i) => {
-              const isLineRightDirection = i % 2 ? isRightDirection : !isRightDirection;
-              return (
-                <Marquee
-                  key={i}
-                  direction={isLineRightDirection ? "right" : "left"}
-                  gradient={false}
-                  play={showTransition}
-                  speed={marqueeSpeed}
-                  className={i % 2 ? "-my-10" : ""}
-                >
-                  <div className="px-4">{currentGreeting || " "}</div>
-                </Marquee>
-              );
-            })}
+          <div className="stat place-items-center">
+            <div className="stat-title">Tokens Minted</div>
+            <div className="stat-value text-secondary">{totalSended}</div>
           </div>
-        </div>
 
-        <div className="mt-3 flex items-end justify-between">
-          <button
-            className={`btn btn-circle btn-ghost border border-primary hover:border-primary w-12 h-12 p-1 bg-neutral flex items-center ${
-              isRightDirection ? "justify-start" : "justify-end"
-            }`}
-            onClick={() => {
-              if (transitionEnabled) {
-                setIsRightDirection(!isRightDirection);
-              }
-            }}
-          >
-            <div className="border border-primary rounded-full bg-secondary w-2 h-2" />
-          </button>
-          <div className="w-44 p-0.5 flex items-center bg-neutral border border-primary rounded-full">
-            <div
-              className="h-1.5 border border-primary rounded-full bg-secondary animate-grow"
-              style={{ animationPlayState: showTransition ? "running" : "paused" }}
-            />
+          <div className="stat place-items-center">
+            <div className="stat-title">Total Tokens</div>
+            <div className="stat-value">{(dataMA ? dataMA.toNumber() : 0) + totalSended}</div>
           </div>
         </div>
       </div>
